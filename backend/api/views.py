@@ -22,7 +22,7 @@ def process_csv_file(request):
         # test
         db = create_engine(token)
         con = db.connect()
-        MT.to_sql("prueba", con=con, if_exists='replace', index=True)
+        MT.to_sql("prueba", con=con, if_exists='replace', index=False)
         con.close()
         #print(MT)
         return JsonResponse({'message': 'CSV file processed successfully'})
