@@ -1,3 +1,4 @@
+import os
 from .utils import get_data
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -7,12 +8,12 @@ from django.views.decorators.csrf import csrf_exempt
 def process_csv_file(request):
     if request.method == 'POST':
         MT = get_data(request=request, filename="MT")
-        print(MT)
+        #print(MT)
+        print(os.getenv("DB_PASS"))
         return JsonResponse({'message': 'CSV file processed successfully'})
     else:
-        return JsonResponse({
-                    'error': 'Expected a POST request with attached files'
-                }, status=400)
+        json = {'error': 'Expected a POST request with attached files'}
+        return JsonResponse(json, status=400)
 
 
 
