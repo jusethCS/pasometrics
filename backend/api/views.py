@@ -8,6 +8,7 @@ def process_csv_file(request):
     if request.method == 'POST':
         MT = get_data(request=request, filename="MT")
         print(MT)
+        return JsonResponse({'message': 'CSV file processed successfully'})
     else:
         return JsonResponse({
                     'error': 'Expected a POST request with attached files'
