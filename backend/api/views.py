@@ -1,4 +1,5 @@
 import os
+import jwt
 import psycopg2
 import pandas as pd
 from .utils import get_data
@@ -10,7 +11,8 @@ from django.views.decorators.csrf import csrf_exempt
 # Enviromental variables
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
-DB_NAME = os.getenv('DB_NAME')
+DB_NAME = os.getenv("DB_NAME")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 
 # Generate the conection token
@@ -20,6 +22,17 @@ token = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@localhost:5432/{DB_NAME}"
 @csrf_exempt
 def process_csv_file(request):
     if request.method == 'POST':
+        # Verify the token was provided
+        auth_token = request.headers.get('auth')
+        if not auth_token:
+            return JsonResponse({'error': 'Auth token was not provided'}, status=401)
+        try:
+            jwt.decode(auth_token, SECRET_KEY, algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            return JsonResponse({'error': 'Expired token'}, status=401)
+        except jwt.InvalidTokenError:
+            return JsonResponse({'error': 'Invalid token'}, status=401)
+
         # Read and format data
         MT = get_data(request=request, filename="MT", token=token)
         M8 = get_data(request=request, filename="M8", token=token)
@@ -60,8 +73,7 @@ def view_csv_data(request):
 
     return response
 
-
-
+# http://ec2-54-88-30-239.compute-1.amazonaws.com/get-data?table=MT
 
 
 

@@ -1,3 +1,4 @@
+import os
 import requests
 
 # API URL
@@ -19,7 +20,8 @@ csv_file = {
 #data = {'clave': 'valor'}
 
 # Send POST request
-response = requests.post(url, files=csv_file)#, data=data)
+token = os.getenv("TOKEN")
+response = requests.post(url, files=csv_file, headers={'auth': token})#, data=data)
 
 # Process the response
 if response.status_code == 200:
