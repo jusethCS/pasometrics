@@ -1,4 +1,5 @@
 import os
+import psycopg2
 from .utils import get_data
 from sqlalchemy import create_engine
 from django.http import JsonResponse
