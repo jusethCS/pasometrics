@@ -3,7 +3,7 @@ import psycopg2
 import pandas as pd
 from .utils import get_data
 from sqlalchemy import create_engine
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -55,6 +55,21 @@ def process_csv_file(request):
         return JsonResponse(json, status=400)
 
 
+
+def view_csv_data(request):
+    db = create_engine(token)
+    con = db.connect()
+    data = pd.read_sql("select * from prueba;", con)
+    con.close()
+
+    # Convertir el DataFrame en un archivo CSV
+    csv_data = data.to_csv(index=False)
+
+    # Crear una respuesta HTTP con el archivo CSV como contenido
+    response = HttpResponse(csv_data, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="data.csv"'  # Nombre del archivo CSV
+
+    return response
 
 
 
