@@ -1,13 +1,16 @@
 import csv
+import psycopg2
 import pandas as pd
+from sqlalchemy import create_engine
 
-def get_data(request, filename):
+def get_data(request, filename, token):
     """
     Function to read and parse a CSV file uploaded via a request object.
 
     Args:
         - request: The HTTP request object containing the uploaded file.
         - filename: The name of the file uploaded.
+        - token: Token for DB connection
 
     Returns:
         - DataFrame: A Pandas DataFrame containing the data from the CSV file.
@@ -19,29 +22,35 @@ def get_data(request, filename):
     decoded_file = csv_file.read().decode('utf-8')
     reader = csv.reader(decoded_file.splitlines())
     df = pd.DataFrame(reader, columns=next(reader))
-    df = df.drop(columns=['Index'])
 
     # Rename colunms
-    table = filename.lower()
     df = df.rename(columns={
+        "Index":"index",
         "Date":"date",
         "Time":"time",
         "Recording Time":"recording_time",
-        "Heart Rate":f"heart_rate_{table}",
-        "Step Count":f"step_count_{table}",
-        "Acceleration - X":f"ax_{table}",
-        "Acceleration - Y":f"ay_{table}",
-        "Acceleration - Z":f"az_{table}",
-        "Attitude - Pitch":f"pitch_{table}",
-        "Attitude - Roll":f"roll_{table}",
-        "Attitude - Yaw":f"yaw_{table}",
-        "Rotation - X":f"rx_{table}",
-        "Rotation - Y":f"ry_{table}",
-        "Rotation - Z":f"rz_{table}",
-        "Gravity - X":f"gx_{table}",
-        "Gravity - Y":f"gy_{table}",
-        "Gravity - Z":f"gz_{table}"
+        "Heart Rate":"heart_rate",
+        "Step Count":"step_count",
+        "Acceleration - X":"ax",
+        "Acceleration - Y":"ay",
+        "Acceleration - Z":"az",
+        "Attitude - Pitch":"pitch",
+        "Attitude - Roll":"roll",
+        "Attitude - Yaw":"yaw",
+        "Rotation - X":"rx",
+        "Rotation - Y":"ry",
+        "Rotation - Z":"rz",
+        "Gravity - X":"gx",
+        "Gravity - Y":"gy",
+        "Gravity - Z":"gz"
     })
+
+    # Insert data into DB
+    table = filename.lower()
+    db = create_engine(token)
+    con = db.connect()
+    df.to_sql(table, con=con, if_exists='append', index=False)
+    con.close()
     
     # Return the DataFrame containing the CSV data
     return df

@@ -21,32 +21,19 @@ token = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@localhost:5432/{DB_NAME}"
 def process_csv_file(request):
     if request.method == 'POST':
         # Read and format data
-        MT = get_data(request=request, filename="MT")
-        M8 = get_data(request=request, filename="M8")
-        DDT = get_data(request=request, filename="DDT")
-        DIT = get_data(request=request, filename="DIT")
-        PDT = get_data(request=request, filename="PDT")
-        PIT = get_data(request=request, filename="PIT")
-        DD8 = get_data(request=request, filename="DD8")
-        DI8 = get_data(request=request, filename="DI8")
-        PD8 = get_data(request=request, filename="PD8")
-        PI8 = get_data(request=request, filename="PI8")
+        MT = get_data(request=request, filename="MT", token=token)
+        M8 = get_data(request=request, filename="M8", token=token)
+        DDT = get_data(request=request, filename="DDT", token=token)
+        DIT = get_data(request=request, filename="DIT", token=token)
+        PDT = get_data(request=request, filename="PDT", token=token)
+        PIT = get_data(request=request, filename="PIT", token=token)
+        DD8 = get_data(request=request, filename="DD8", token=token)
+        DI8 = get_data(request=request, filename="DI8", token=token)
+        PD8 = get_data(request=request, filename="PD8", token=token)
+        PI8 = get_data(request=request, filename="PI8", token=token)
         
         # Join dataframes
         dfs = [MT, M8, DDT, DIT, PDT, PIT, DD8, DI8, PD8, PI8]
-        join_df = dfs[0]
-        for df in dfs[1:]:
-            join_df = pd.merge(
-                        join_df, 
-                        df, 
-                        on=["date", "time", "recording_time"], 
-                        how="outer")
-        
-        # Insert data into DB
-        db = create_engine(token)
-        con = db.connect()
-        join_df.to_sql("prueba", con=con, if_exists='replace', index=False)
-        con.close()
 
         #print(MT)
         return JsonResponse({'message': 'CSV file processed successfully'})
@@ -57,9 +44,11 @@ def process_csv_file(request):
 
 
 def view_csv_data(request):
+    table = request.GET.get('table')
+                            
     db = create_engine(token)
     con = db.connect()
-    data = pd.read_sql("select * from prueba;", con)
+    data = pd.read_sql(f"select * from {table.lower()};", con)
     con.close()
 
     # Convertir el DataFrame en un archivo CSV
@@ -67,7 +56,7 @@ def view_csv_data(request):
 
     # Crear una respuesta HTTP con el archivo CSV como contenido
     response = HttpResponse(csv_data, content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="data.csv"'  # Nombre del archivo CSV
+    response['Content-Disposition'] = f'attachment; filename="{table}.csv"'
 
     return response
 
