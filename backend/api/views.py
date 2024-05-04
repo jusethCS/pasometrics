@@ -1,25 +1,35 @@
-import pandas as pd
-import csv
+from .utils import get_data
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
+
 @csrf_exempt
-def procesar_archivo_csv(request):
-    if request.method == 'POST' and request.FILES.get('archivo'):
-        archivo_csv = request.FILES['archivo']
-        try:
-            decoded_file = archivo_csv.read().decode('utf-8')
-            reader = csv.reader(decoded_file.splitlines())
-            
-            # Convertir el CSV a un DataFrame de pandas
-            df = pd.DataFrame(reader, columns=next(reader))
-            
-            # Aquí puedes procesar el DataFrame según tus necesidades
-            print(df)
-            
-            # Puedes devolver el DataFrame en formato JSON si es necesario
-            return JsonResponse({'mensaje': 'Archivo CSV procesado correctamente', 'datos': df.to_json(orient='records')})
-        except Exception as e:
-            return JsonResponse({'error': 'Error al procesar el archivo CSV: {}'.format(str(e))}, status=400)
+def process_csv_file(request):
+    if request.method == 'POST':
+        MT = get_data(request=request, filename="MT")
+        print(MT)
     else:
-        return JsonResponse({'error': 'Se esperaba una solicitud POST con un archivo adjunto'}, status=400)
+        return JsonResponse({
+                    'error': 'Expected a POST request with attached files'
+                }, status=400)
+
+
+
+
+
+
+
+
+#Nombre de los archivos:
+#CSV del lugar donde se ubican los sensors en el caballo. 
+
+# MT = Montador en la tabla (cuando el caballo va en linea recta)
+# M8 = Montador en 8 (cuando el caballo va circulos hacienda el “8”)
+# DDT = pata Delantero derecho en la tabla
+# DIT = pata Delantero Izquierdo en la tabla
+# PDT = pata Posterior derecho en la tabla
+# PIT = pata Posterior Izquierdo en la tabla
+# DD8 = pata delantero derecho en el 8
+# DI8 = pata delantera izquierda en el 8
+# PD8 = pata posterior derecho en el 8
+# PI8 = posterior izquierda en el 8

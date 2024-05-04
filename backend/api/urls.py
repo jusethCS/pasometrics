@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import procesar_archivo_csv
+from .views import process_csv_file
 
 urlpatterns = [
-    path('upload/', procesar_archivo_csv, name='procesar_csv'),
+    path('upload/', process_csv_file, name='process_csv_file'),
 ]
