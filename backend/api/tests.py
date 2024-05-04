@@ -1,5 +1,6 @@
 import os
 import requests
+from dotenv import load_dotenv
 
 # API URL
 url = 'http://ec2-54-88-30-239.compute-1.amazonaws.com/upload/'
@@ -19,8 +20,11 @@ csv_file = {
 }
 #data = {'clave': 'valor'}
 
-# Send POST request
+# Load enviromental variables
+load_dotenv()
 token = os.getenv("TOKEN")
+
+# Send POST request
 response = requests.post(url, files=csv_file, headers={'auth': token})#, data=data)
 
 # Process the response
