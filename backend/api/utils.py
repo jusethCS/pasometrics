@@ -19,11 +19,11 @@ def get_data(request, filename):
     decoded_file = csv_file.read().decode('utf-8')
     reader = csv.reader(decoded_file.splitlines())
     df = pd.DataFrame(reader, columns=next(reader))
+    df = df.drop(columns=['Index'])
 
     # Rename colunms
     table = filename.lower()
     df = df.rename(columns={
-        "Index":"index",
         "Date":"date",
         "Time":"time",
         "Recording Time":"recording_time",

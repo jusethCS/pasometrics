@@ -36,7 +36,11 @@ def process_csv_file(request):
         dfs = [MT, M8, DDT, DIT, PDT, PIT, DD8, DI8, PD8, PI8]
         join_df = dfs[0]
         for df in dfs[1:]:
-            join_df = pd.merge(join_df, df, on=["date", "time"], how="outer")
+            join_df = pd.merge(
+                        join_df, 
+                        df, 
+                        on=["date", "time", "recording_time"], 
+                        how="outer")
         
         # Insert data into DB
         db = create_engine(token)
