@@ -23,6 +23,10 @@ def get_data(request, filename, token):
     reader = csv.reader(decoded_file.splitlines())
     df = pd.DataFrame(reader, columns=next(reader))
 
+    # Add ID informacion
+    df['horse_id'] = request.POST.get("horseId")
+    df['test_id'] = request.POST.get("test")
+
     # Rename colunms
     df = df.rename(columns={
         "Index":"index",

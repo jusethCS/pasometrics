@@ -14,7 +14,6 @@ DB_PASS = os.getenv("DB_PASS")
 DB_NAME = os.getenv("DB_NAME")
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-
 # Generate the conection token
 token = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@localhost:5432/{DB_NAME}"
 
@@ -22,43 +21,45 @@ token = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@localhost:5432/{DB_NAME}"
 @csrf_exempt
 def process_csv_file(request):
     if request.method == 'POST':
-        # Verify the token was provided
+        # Verify the token
         auth_token = request.headers.get('auth')
         if not auth_token:
-            return JsonResponse({'error': 'Auth token was not provided'}, status=401)
+            response = {'error': 'Token no provided'}
+            return JsonResponse(response, status=401)
         try:
             jwt.decode(auth_token, SECRET_KEY, algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
-            return JsonResponse({'error': 'Expired token'}, status=401)
+            response = {'error': 'Expired token'}
+            return JsonResponse(response, status=401)
         except jwt.InvalidTokenError:
-            return JsonResponse({'error': 'Invalid token'}, status=401)
+            response = {'error': 'Invalid token'}
+            return JsonResponse(response, status=401)
 
         # Read and format data
-        MT = get_data(request=request, filename="MT", token=token)
-        M8 = get_data(request=request, filename="M8", token=token)
-        DDT = get_data(request=request, filename="DDT", token=token)
-        DIT = get_data(request=request, filename="DIT", token=token)
-        PDT = get_data(request=request, filename="PDT", token=token)
-        PIT = get_data(request=request, filename="PIT", token=token)
-        DD8 = get_data(request=request, filename="DD8", token=token)
-        DI8 = get_data(request=request, filename="DI8", token=token)
-        PD8 = get_data(request=request, filename="PD8", token=token)
-        PI8 = get_data(request=request, filename="PI8", token=token)
-        
-        # Join dataframes
-        dfs = [MT, M8, DDT, DIT, PDT, PIT, DD8, DI8, PD8, PI8]
+        MT = get_data(request,"MT", token)
+        M8 = get_data(request,"M8", token)
+        DDT = get_data(request,"DDT", token)
+        DIT = get_data(request,"DIT", token)
+        PDT = get_data(request,"PDT", token)
+        PIT = get_data(request,"PIT", token)
+        DD8 = get_data(request,"DD8", token)
+        DI8 = get_data(request,"DI8", token)
+        PD8 = get_data(request,"PD8", token)
+        PI8 = get_data(request,"PI8", token)
 
-        #print(MT)
-        return JsonResponse({'message': 'CSV file processed successfully'})
+        response = {'message': 'CSV file processed successfully'}
+        return JsonResponse(response)
     else:
-        json = {'error': 'Expected a POST request with attached files'}
-        return JsonResponse(json, status=400)
+        response = {'error': 'Expected a POST request with attached files'}
+        return JsonResponse(response, status=400)
 
 
 
 def view_csv_data(request):
+    # Define table to query
     table = request.GET.get('table')
-                            
+
+    # Query to database                     
     db = create_engine(token)
     con = db.connect()
     data = pd.read_sql(f"select * from {table.lower()};", con)
