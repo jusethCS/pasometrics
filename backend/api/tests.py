@@ -5,7 +5,16 @@ url = 'http://ec2-54-88-30-239.compute-1.amazonaws.com/upload/'
 
 # Setting the file and data
 csv_file = {
-    'MT': open('MT.csv', 'rb')
+    'MT': open('MT.csv', 'rb'),
+    'M8': open('M8.csv', 'rb'),
+    'DDT': open('DDT.csv', 'rb'),
+    'DIT': open('DIT.csv', 'rb'),
+    'PDT': open('PDT.csv', 'rb'),
+    'PIT': open('PIT.csv', 'rb'),
+    'DD8': open('DD8.csv', 'rb'),
+    'DI8': open('DI8.csv', 'rb'),
+    'PD8': open('PD8.csv', 'rb'),
+    'PI8': open('PI8.csv', 'rb'),
 }
 #data = {'clave': 'valor'}
 
