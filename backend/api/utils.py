@@ -21,25 +21,26 @@ def get_data(request, filename):
     df = pd.DataFrame(reader, columns=next(reader))
 
     # Rename colunms
+    table = filename.lower()
     df = df.rename(columns={
         "Index":"index",
         "Date":"date",
         "Time":"time",
         "Recording Time":"recording_time",
-        "Heart Rate":"heart_rate",
-        "Step Count":"step_count",
-        "Acceleration - X":"ax",
-        "Acceleration - Y":"ay",
-        "Acceleration - Z":"az",
-        "Attitude - Pitch":"pitch",
-        "Attitude - Roll":"roll",
-        "Attitude - Yaw":"yaw",
-        "Rotation - X":"rx",
-        "Rotation - Y":"ry",
-        "Rotation - Z":"rz",
-        "Gravity - X":"gx",
-        "Gravity - Y":"gy",
-        "Gravity - Z":"gz"
+        "Heart Rate":f"heart_rate_{table}",
+        "Step Count":f"step_count_{table}",
+        "Acceleration - X":f"ax_{table}",
+        "Acceleration - Y":f"ay_{table}",
+        "Acceleration - Z":f"az_{table}",
+        "Attitude - Pitch":f"pitch_{table}",
+        "Attitude - Roll":f"roll_{table}",
+        "Attitude - Yaw":f"yaw_{table}",
+        "Rotation - X":f"rx_{table}",
+        "Rotation - Y":f"ry_{table}",
+        "Rotation - Z":f"rz_{table}",
+        "Gravity - X":f"gx_{table}",
+        "Gravity - Y":f"gy_{table}",
+        "Gravity - Z":f"gz_{table}"
     })
     
     # Return the DataFrame containing the CSV data
