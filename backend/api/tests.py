@@ -18,14 +18,17 @@ csv_file = {
     'PD8': open('PD8.csv', 'rb'),
     'PI8': open('PI8.csv', 'rb'),
 }
-#data = {'clave': 'valor'}
+data = {
+    'horseId': 'H09888',
+    'test': 'T0001'
+}
 
 # Load enviromental variables
 load_dotenv()
 token = os.getenv("TOKEN")
 
 # Send POST request
-response = requests.post(url, files=csv_file, headers={'auth': token})#, data=data)
+response = requests.post(url, files=csv_file, headers={'auth': token}, data=data)
 
 # Process the response
 if response.status_code == 200:
