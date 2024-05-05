@@ -34,7 +34,8 @@ def process_csv_file(request):
         except jwt.InvalidTokenError:
             response = {'error': 'Invalid token'}
             return JsonResponse(response, status=401)
-
+        
+        # request.POST.get("horseId")
         # Read and format data
         MT = get_data(request,"MT", token)
         M8 = get_data(request,"M8", token)

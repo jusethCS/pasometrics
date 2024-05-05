@@ -23,30 +23,29 @@ def get_data(request, filename, token):
     reader = csv.reader(decoded_file.splitlines())
     df = pd.DataFrame(reader, columns=next(reader))
 
-    # Add ID informacion
-    df['horse_id'] = request.POST.get("horseId")
-    df['test_id'] = request.POST.get("test")
+    # Add test ID
+    df['_test_id'] = request.POST.get("test")
 
     # Rename colunms
     df = df.rename(columns={
-        "Index":"index",
-        "Date":"date",
-        "Time":"time",
-        "Recording Time":"recording_time",
-        "Heart Rate":"heart_rate",
-        "Step Count":"step_count",
-        "Acceleration - X":"ax",
-        "Acceleration - Y":"ay",
-        "Acceleration - Z":"az",
-        "Attitude - Pitch":"pitch",
-        "Attitude - Roll":"roll",
-        "Attitude - Yaw":"yaw",
-        "Rotation - X":"rx",
-        "Rotation - Y":"ry",
-        "Rotation - Z":"rz",
-        "Gravity - X":"gx",
-        "Gravity - Y":"gy",
-        "Gravity - Z":"gz"
+        "Index":"_index",
+        "Date":"_date",
+        "Time":"_time",
+        "Recording Time":"_recording_time",
+        "Heart Rate":"_heart_rate",
+        "Step Count":"_step_count",
+        "Acceleration - X":"_acceleration_x",
+        "Acceleration - Y":"_acceleration_y",
+        "Acceleration - Z":"_acceleration_z",
+        "Attitude - Pitch":"_attitude_pitch",
+        "Attitude - Roll":"_attitude_roll",
+        "Attitude - Yaw":"_attitude_yaw",
+        "Rotation - X":"_rotation_x",
+        "Rotation - Y":"_rotation_y",
+        "Rotation - Z":"_rotation_z",
+        "Gravity - X":"_gravity_x",
+        "Gravity - Y":"_gravity_y",
+        "Gravity - Z":"_gravity_z"
     })
 
     # Insert data into DB
