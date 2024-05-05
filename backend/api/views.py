@@ -18,7 +18,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 token = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@localhost:5432/{DB_NAME}"
 
 
-
+@csrf_exempt
 def horse_crud(request):
     if request.method == 'GET': 
         # Query to database                  
