@@ -28,7 +28,7 @@ def horse_crud(request):
         con.close()
 
         # Response
-        return JsonResponse(data.to_json(orient='records'))
+        return JsonResponse(data.to_json(orient='records'), safe=False)
     
     if request.method == 'POST':
         # Retrieve horse name
@@ -44,4 +44,4 @@ def horse_crud(request):
         con.close()
 
         # Response: ID for inserted horse
-        return JsonResponse(data.to_json(orient='records'))
+        return JsonResponse(data.to_json(orient='records'), safe=False)
