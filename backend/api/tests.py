@@ -3,7 +3,7 @@ import requests
 from dotenv import load_dotenv
 
 # API URL
-url = 'http://ec2-54-88-30-239.compute-1.amazonaws.com/upload/'
+url = 'http://ec2-54-88-30-239.compute-1.amazonaws.com/api/upload/'
 
 # Setting the file and data
 csv_file = {
