@@ -34,12 +34,14 @@ def horse_crud(request):
         # Retrieve horse name
         name = request.POST.get('name', None)
         if name is None:
-            return JsonResponse({'error': 'El campo "name" es requerido'}, status=400)
+            return JsonResponse({'error': 'Field "name" is required'}, status=400)
 
         # Insert into database
         db = create_engine(token)
         con = db.connect()
-        con.execute(f"INSERT INTO horse (name) VALUES ('{name}');")
+        #con.execute(f"INSERT INTO horse (name) VALUES ('{name}');")
+        df = pd.DataFrame({'name': [name]})
+        df.to_sql("horse", con=con, if_exists='append', index=False)
         data = pd.read_sql(f"select * from horse where name='{name}';", con)
         con.close()
 
