@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import horse_crud
+from .controllers.horse import horse_controller
 
 urlpatterns = [
-    path('horse/', horse_crud, name='horse')
+    path('horse/', horse_controller, name='horse')
 ]
