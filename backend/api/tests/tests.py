@@ -36,3 +36,11 @@ if response.status_code == 200:
 else:
     print("Error sending CSV file:", response.text)
 
+
+
+import requests
+url = 'http://ec2-54-88-30-239.compute-1.amazonaws.com/api/horse/'
+data = {"name": "PURA SANGRE"}
+response = requests.post(url, data=data)
+
+
