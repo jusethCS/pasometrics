@@ -46,4 +46,4 @@ def horse_crud(request):
         con.close()
 
         # Response: ID for inserted horse
-        return JsonResponse(data.to_json(orient='records'), safe=True)
+        return JsonResponse(data.to_dict(orient='records'), safe=False)
