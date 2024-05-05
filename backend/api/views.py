@@ -28,7 +28,7 @@ def horse_crud(request):
         con.close()
 
         # Response
-        return JsonResponse(data.to_dict(orient='records'))
+        return JsonResponse(data.to_dict(orient='records'), safe=False)
     
     if request.method == 'POST':
         # Retrieve horse name
