@@ -28,24 +28,24 @@ def get_data(request, filename, token):
 
     # Rename colunms
     df = df.rename(columns={
-        "Index":"_index",
-        "Date":"_date",
-        "Time":"_time",
-        "Recording Time":"_recording_time",
-        "Heart Rate":"_heart_rate",
-        "Step Count":"_step_count",
-        "Acceleration - X":"_acceleration_x",
-        "Acceleration - Y":"_acceleration_y",
-        "Acceleration - Z":"_acceleration_z",
-        "Attitude - Pitch":"_attitude_pitch",
-        "Attitude - Roll":"_attitude_roll",
-        "Attitude - Yaw":"_attitude_yaw",
-        "Rotation - X":"_rotation_x",
-        "Rotation - Y":"_rotation_y",
-        "Rotation - Z":"_rotation_z",
-        "Gravity - X":"_gravity_x",
-        "Gravity - Y":"_gravity_y",
-        "Gravity - Z":"_gravity_z"
+        "Index":"index",
+        "Date":"date",
+        "Time":"time",
+        "Recording Time":"recording_time",
+        "Heart Rate":"heart_rate",
+        "Step Count":"step_count",
+        "Acceleration - X":"acceleration_x",
+        "Acceleration - Y":"acceleration_y",
+        "Acceleration - Z":"acceleration_z",
+        "Attitude - Pitch":"attitude_pitch",
+        "Attitude - Roll":"attitude_roll",
+        "Attitude - Yaw":"attitude_yaw",
+        "Rotation - X":"rotation_x",
+        "Rotation - Y":"rotation_y",
+        "Rotation - Z":"rotation_z",
+        "Gravity - X":"gravity_x",
+        "Gravity - Y":"gravity_y",
+        "Gravity - Z":"gravity_z"
     })
 
     # Insert data into DB
