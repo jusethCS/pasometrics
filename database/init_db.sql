@@ -40,11 +40,10 @@ CREATE TABLE view (
 );
 
 CREATE TABLE test (
-    id TEXT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     horse TEXT NOT NULL 
         REFERENCES horse
 		ON UPDATE cascade 
 		ON DELETE set null,
-    date TIMESTAMP NOT NULL,
-    description TEXT
+    date TIMESTAMP NOT NULL
 );
