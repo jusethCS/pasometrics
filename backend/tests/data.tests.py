@@ -34,3 +34,6 @@ if response.status_code == 200:
 else:
     print("Error sending CSV file:", response.text)
 
+
+# To download CSV data
+# http://ec2-54-88-30-239.compute-1.amazonaws.com/api/csv?table=MT
