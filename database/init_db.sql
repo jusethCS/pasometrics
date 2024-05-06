@@ -24,7 +24,7 @@ CREATE TABLE horse (
     name TEXT NOT NULL,
     birthday DATE,
     gait TEXT,
-    gender TEXT,
+    gender TEXT
 );
 
 CREATE TABLE view (
