@@ -14,6 +14,12 @@ response = requests.get(url, headers={'auth': token})
 response.text
 
 # POST test: Insert into database
-data = {"name": "PURA SANGRE"}
+data = {
+    "id": "ASD 364863 -C GD",
+    "name": "BARAJAS TOCATA DE AGUA BONITA",
+    "birthday": "2022-05-28",
+    "gender": "HEMBRA",
+    "gait": "TROCHA",
+}
 response = requests.post(url, data=data, headers={'auth': token})
 response.text

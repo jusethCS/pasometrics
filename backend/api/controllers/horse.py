@@ -52,17 +52,32 @@ def horse_controller(request):
         con.close()
     
     if request.method == 'POST':
+        # Retrieve horse id
+        idr = request.POST.get('id', None)
+        if idr is None:
+            return JsonResponse({'error': 'Field "id" is required'}, status=400)
+        
         # Retrieve horse name
         name = request.POST.get('name', None)
         if name is None:
             return JsonResponse({'error': 'Field "name" is required'}, status=400)
-
+        
+        # Retrieve other horse properties
+        birthday = request.POST.get('birthday')       
+        gait = request.POST.get('gait')
+        gender = request.POST.get('gender')
+        
         # Insert into database
         db = create_engine(token)
         con = db.connect()
-        df = pd.DataFrame({'name': [name]})
+        df = pd.DataFrame({
+            'id': [idr],
+            'name': [name],
+            'birthday': [birthday],
+            'gender': [gender],
+            'gait': [gait]})
         df.to_sql("horse", con=con, if_exists='append', index=False)
-        data = pd.read_sql(f"select * from horse where name='{name}';", con)
+        data = pd.read_sql(f"select * from horse where id='{idr}';", con)
         con.close()
 
     # Response
