@@ -11,7 +11,7 @@ CREATE DATABASE pasometricsdb;
 
 \c pasometricsdb
 
-CREATE TABLE user (
+CREATE TABLE users (
     username TEXT NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     lastname TEXT NOT NULL,
