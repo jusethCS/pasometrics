@@ -7,7 +7,7 @@ import csv
 import psycopg2
 import pandas as pd
 from sqlalchemy import create_engine
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -29,7 +29,7 @@ token = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@localhost:5432/{DB_NAME}"
 ###############################################################################
 #                       UTILS AND AUXILIAR FUNCTIONS                          #
 ###############################################################################
-def get_data(request, filename, token):
+def get_data(request, filename):
     """
     Function to read and parse a CSV file uploaded via a request object.
 
@@ -50,7 +50,7 @@ def get_data(request, filename, token):
     df = pd.DataFrame(reader, columns=next(reader))
 
     # Add test ID
-    df['_test_id'] = request.POST.get("test")
+    df['test_id'] = request.POST.get("test")
 
     # Rename colunms
     df = df.rename(columns={
@@ -90,34 +90,33 @@ def get_data(request, filename, token):
 #                               MAIN CONTROLLER                               #
 ###############################################################################
 @csrf_exempt
-def process_csv_file(request):
+def data_controller(request):
+    # Verify the token
+    auth_token = request.headers.get('auth')
+    if not auth_token:
+        response = {'error': 'Token no provided'}
+        return JsonResponse(response, status=401)
+    try:
+        jwt.decode(auth_token, SECRET_KEY, algorithms=['HS256'])
+    except jwt.ExpiredSignatureError:
+        response = {'error': 'Expired token'}
+        return JsonResponse(response, status=401)
+    except jwt.InvalidTokenError:
+        response = {'error': 'Invalid token'}
+        return JsonResponse(response, status=401)
+    
     if request.method == 'POST':
-        # Verify the token
-        auth_token = request.headers.get('auth')
-        if not auth_token:
-            response = {'error': 'Token no provided'}
-            return JsonResponse(response, status=401)
-        try:
-            jwt.decode(auth_token, SECRET_KEY, algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            response = {'error': 'Expired token'}
-            return JsonResponse(response, status=401)
-        except jwt.InvalidTokenError:
-            response = {'error': 'Invalid token'}
-            return JsonResponse(response, status=401)
-        
-        # request.POST.get("horseId")
         # Read and format data
-        MT = get_data(request,"MT", token)
-        M8 = get_data(request,"M8", token)
-        DDT = get_data(request,"DDT", token)
-        DIT = get_data(request,"DIT", token)
-        PDT = get_data(request,"PDT", token)
-        PIT = get_data(request,"PIT", token)
-        DD8 = get_data(request,"DD8", token)
-        DI8 = get_data(request,"DI8", token)
-        PD8 = get_data(request,"PD8", token)
-        PI8 = get_data(request,"PI8", token)
+        MT = get_data(request,"MT")
+        M8 = get_data(request,"M8")
+        DDT = get_data(request,"DDT")
+        DIT = get_data(request,"DIT")
+        PDT = get_data(request,"PDT")
+        PIT = get_data(request,"PIT")
+        DD8 = get_data(request,"DD8")
+        DI8 = get_data(request,"DI8")
+        PD8 = get_data(request,"PD8")
+        PI8 = get_data(request,"PI8")
 
         response = {'message': 'CSV file processed successfully'}
         return JsonResponse(response)
@@ -127,28 +126,27 @@ def process_csv_file(request):
 
 
 
-#def view_csv_data(request):
-#    # Define table to query
-#    table = request.GET.get('table')
+def view_csv_data(request):
+    # Define table to query
+    table = request.GET.get('table')
 
-#    # Query to database                     
-#    db = create_engine(token)
-#    con = db.connect()
-#    data = pd.read_sql(f"select * from {table.lower()};", con)
-#    con.close()
+    # Query to database                     
+    db = create_engine(token)
+    con = db.connect()
+    data = pd.read_sql(f"select * from {table.lower()};", con)
+    con.close()
 
-#    # Convertir el DataFrame en un archivo CSV
-#    csv_data = data.to_csv(index=False)
+    # Convertir el DataFrame en un archivo CSV
+    csv_data = data.to_csv(index=False)
 
-#    # Crear una respuesta HTTP con el archivo CSV como contenido
-#    response = HttpResponse(csv_data, content_type='text/csv')
-#    response['Content-Disposition'] = f'attachment; filename="{table}.csv"'
+    # Crear una respuesta HTTP con el archivo CSV como contenido
+    response = HttpResponse(csv_data, content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{table}.csv"'
+    return response
 
-#    return response
+
 
 # http://ec2-54-88-30-239.compute-1.amazonaws.com/get-data?table=MT
-
-
 
 #Nombre de los archivos:
 #CSV del lugar donde se ubican los sensors en el caballo. 
