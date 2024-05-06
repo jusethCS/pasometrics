@@ -29,7 +29,7 @@ CREATE TABLE horse (
 
 CREATE TABLE view (
     user TEXT NOT NULL 
-        REFERENCES user
+        REFERENCES users
 		ON UPDATE cascade 
 		ON DELETE set null,
     horse TEXT NOT NULL 
