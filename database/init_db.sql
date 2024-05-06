@@ -11,15 +11,37 @@ CREATE DATABASE pasometricsdb;
 
 \c pasometricsdb
 
+CREATE TABLE user (
+    username TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    lastname TEXT NOT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL
+);
 
 CREATE TABLE horse (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    birthday DATE,
+    gait TEXT,
+    gender TEXT,
+);
+
+CREATE TABLE view (
+    user TEXT NOT NULL 
+        REFERENCES user
+		ON UPDATE cascade 
+		ON DELETE set null,
+    horse TEXT NOT NULL 
+        REFERENCES horse
+		ON UPDATE cascade 
+		ON DELETE set null,
+    class TEXT
 );
 
 CREATE TABLE test (
-    id SERIAL PRIMARY KEY,
-    horse INTEGER NOT NULL 
+    id TEXT PRIMARY KEY,
+    horse TEXT NOT NULL 
         REFERENCES horse
 		ON UPDATE cascade 
 		ON DELETE set null,
