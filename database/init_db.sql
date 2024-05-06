@@ -28,7 +28,7 @@ CREATE TABLE horse (
 );
 
 CREATE TABLE view (
-    user TEXT NOT NULL 
+    username TEXT NOT NULL 
         REFERENCES users
 		ON UPDATE cascade 
 		ON DELETE set null,
