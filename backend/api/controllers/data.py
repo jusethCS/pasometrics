@@ -29,20 +29,15 @@ token = f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@localhost:5432/{DB_NAME}"
 ###############################################################################
 #                       UTILS AND AUXILIAR FUNCTIONS                          #
 ###############################################################################
-def get_data(request, filename):
+def insert_data(request):
     """
-    Function to read and parse a CSV file uploaded via a request object.
+    Function to insert a CSV file into DB via a request object.
 
     Args:
         - request: The HTTP request object containing the uploaded file.
-        - filename: The name of the file uploaded.
-        - token: Token for DB connection
-
-    Returns:
-        - DataFrame: A Pandas DataFrame containing the data from the CSV file.
     """
     # Access the uploaded CSV file from the request object
-    csv_file = request.FILES[filename]
+    csv_file = request.FILES["file"]
     
     # Read the CSV content and parse to dataframe
     decoded_file = csv_file.read().decode('utf-8')
@@ -75,14 +70,11 @@ def get_data(request, filename):
     })
 
     # Insert data into DB
-    table = filename.lower()
+    table = request.POST.get("table").lower()
     db = create_engine(token)
     con = db.connect()
     df.to_sql(table, con=con, if_exists='append', index=False)
     con.close()
-    
-    # Return the DataFrame containing the CSV data
-    return df
 
 
 
@@ -105,18 +97,20 @@ def data_controller(request):
         response = {'error': 'Invalid token'}
         return JsonResponse(response, status=401)
     
+    # POST token
     if request.method == 'POST':
+        # Determine the test is provided
+        test_id = request.POST.get('test', None)
+        if test_id is None:
+            return JsonResponse({'error': 'Field "test" is required'}, status=400)
+        
+        # Determine the table is provided
+        table_id = request.POST.get('table', None)
+        if table_id is None:
+            return JsonResponse({'error': 'Field "table" is required'}, status=400)
+
         # Read and format data
-        MT = get_data(request,"MT")
-        M8 = get_data(request,"M8")
-        DDT = get_data(request,"DDT")
-        DIT = get_data(request,"DIT")
-        PDT = get_data(request,"PDT")
-        PIT = get_data(request,"PIT")
-        DD8 = get_data(request,"DD8")
-        DI8 = get_data(request,"DI8")
-        PD8 = get_data(request,"PD8")
-        PI8 = get_data(request,"PI8")
+        insert_data(request)
 
         response = {'message': 'CSV file processed successfully'}
         return JsonResponse(response)
@@ -143,6 +137,10 @@ def view_csv_data(request):
     response = HttpResponse(csv_data, content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="{table}.csv"'
     return response
+
+
+
+
 
 
 
