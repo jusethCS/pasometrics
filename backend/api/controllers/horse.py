@@ -64,8 +64,8 @@ def horse_controller(request):
         
         # Retrieve other horse properties
         birthday = request.POST.get('birthday')       
-        gait = request.POST.get('gait')
-        gender = request.POST.get('gender')
+        gait = request.POST.get('gait').upper()
+        gender = request.POST.get('gender').upper()
         
         # Insert into database
         db = create_engine(token)
