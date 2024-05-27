@@ -108,6 +108,8 @@ def data_controller(request):
         table_id = request.POST.get('table', None)
         if table_id is None:
             return JsonResponse({'error': 'Field "table" is required'}, status=400)
+        if not (table_id in ["M", "DD", "DI", "PD", "PI"]):
+            return JsonResponse({'error': 'Field "table" would be "M", "DD", "DI", "PD", "PI"'}, status=400)
 
         # Read and format data
         insert_data(request)

@@ -8,7 +8,7 @@ url = 'http://ec2-54-88-30-239.compute-1.amazonaws.com/api/upload/'
 
 # Setting the file and data
 csv_file = {'file': open('csv/MT.csv', 'rb')}
-data = {"test": "1", "table": "MT"}
+data = {"test": "1", "table": "M"}
 
 # Load enviromental variables
 load_dotenv()
