@@ -72,7 +72,7 @@ def test_controller(request):
         # Insert into database
         db = create_engine(token)
         con = db.connect()
-        df = pd.DataFrame({'horse': [horse.upper()], 'date':[date], 'testtype': [testType]})
+        df = pd.DataFrame({'horse': [horse.upper()], 'date':[date], 'type': [testType]})
         df.to_sql("test", con=con, if_exists='append', index=False)
         data = pd.read_sql(f"select * from test where horse='{horse}' and date='{date}';", con)
         con.close()
