@@ -25,4 +25,4 @@ else:
 
 
 # To download CSV data
-# http://ec2-54-88-30-239.compute-1.amazonaws.com/api/csv?table=MT
+# http://ec2-54-88-30-239.compute-1.amazonaws.com/api/csv?table=M
