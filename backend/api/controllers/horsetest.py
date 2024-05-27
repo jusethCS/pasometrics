@@ -61,11 +61,18 @@ def test_controller(request):
         date = request.POST.get('datetime', None)
         if date is None:
             return JsonResponse({'error': 'Field "datetime" is required'}, status=400)
+        
+        #Retrieve test type
+        testType = request.POST.get('testType', None)
+        if testType is None:
+            return JsonResponse({'error': 'Field "testType" is required'}, status=400)
+        if not(testType in ["T", "8"]):
+            return JsonResponse({'error': 'Field "testType" would be "T" or "8"'}, status=400)
 
         # Insert into database
         db = create_engine(token)
         con = db.connect()
-        df = pd.DataFrame({'horse': [horse.upper()], 'date':[date]})
+        df = pd.DataFrame({'horse': [horse.upper()], 'date':[date], 'type': [testType]})
         df.to_sql("test", con=con, if_exists='append', index=False)
         data = pd.read_sql(f"select * from test where horse='{horse}' and date='{date}';", con)
         con.close()

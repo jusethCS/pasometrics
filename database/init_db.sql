@@ -45,5 +45,6 @@ CREATE TABLE test (
         REFERENCES horse
 		ON UPDATE cascade 
 		ON DELETE set null,
-    date TIMESTAMP NOT NULL
+    date TIMESTAMP NOT NULL,
+    type TEXT NOT NULL
 );

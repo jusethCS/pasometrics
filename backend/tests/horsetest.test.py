@@ -16,7 +16,8 @@ response.text
 # POST test: Insert into database
 data = {
     "horse": "ASD 364863 -C GD",
-    "datetime": "2024-05-05 15:00:00"
+    "datetime": "2024-05-05 15:00:00",
+    "testType": "T"
 }
 response = requests.post(url, data=data, headers={'auth': token})
 response.text
