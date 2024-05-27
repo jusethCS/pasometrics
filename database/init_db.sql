@@ -46,5 +46,5 @@ CREATE TABLE test (
 		ON UPDATE cascade 
 		ON DELETE set null,
     date TIMESTAMP NOT NULL,
-    type TEXT NOT NULL
+    testtype TEXT NOT NULL
 );
